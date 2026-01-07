@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IcsApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("audit")]
 public class AuditController : ControllerBase
 {
     private readonly InMemoryAuditStore _auditStore;

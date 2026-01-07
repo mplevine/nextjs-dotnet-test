@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IcsApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("cases")]
 public class CasesController : ControllerBase
 {
     private readonly InMemoryCaseStore _store;

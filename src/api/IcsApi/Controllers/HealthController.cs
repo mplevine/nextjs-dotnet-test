@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IcsApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("health")]
 public class HealthController : ControllerBase
 {
     [HttpGet]

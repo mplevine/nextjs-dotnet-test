@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IcsApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("me")]
 public class MeController : ControllerBase
 {
     [HttpGet]
