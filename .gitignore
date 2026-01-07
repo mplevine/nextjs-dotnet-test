@@ -78,3 +78,8 @@ TestResults/
 # ASP.NET Core local-only config (avoid committing secrets)
 appsettings.*.local.json
 secrets.json
+
+# Deployment artifacts
+**/publish/
+
+
