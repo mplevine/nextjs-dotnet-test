@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj": {}
+    "c:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj": {}
   },
   "projects": {
-    "C:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj": {
+    "c:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj",
+        "projectUniqueName": "c:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj",
         "projectName": "IcsApi",
-        "projectPath": "C:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj",
+        "projectPath": "c:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj",
         "packagesPath": "C:\\Users\\ml048949\\.nuget\\packages\\",
-        "outputPath": "C:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\obj\\",
+        "outputPath": "c:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

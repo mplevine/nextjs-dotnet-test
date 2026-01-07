@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PeTEhPNsotE=",
+  "dgSpecHash": "nTSykB7N/I4=",
   "success": true,
-  "projectFilePath": "C:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj",
+  "projectFilePath": "c:\\source\\repos\\nextjs-dotnet-test\\src\\api\\IcsApi\\IcsApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ml048949\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\ml048949\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
