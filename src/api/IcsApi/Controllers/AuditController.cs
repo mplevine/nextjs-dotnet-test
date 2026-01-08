@@ -8,9 +8,9 @@ namespace IcsApi.Controllers;
 [Route("audit")]
 public class AuditController : ControllerBase
 {
-    private readonly InMemoryAuditStore _auditStore;
+    private readonly IAuditStore _auditStore;
 
-    public AuditController(InMemoryAuditStore auditStore)
+    public AuditController(IAuditStore auditStore)
     {
         _auditStore = auditStore;
     }

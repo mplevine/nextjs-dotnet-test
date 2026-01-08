@@ -28,8 +28,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSingleton<InMemoryCaseStore>();
-builder.Services.AddSingleton<InMemoryAuditStore>();
+builder.Services.AddSingleton<ICaseStore, InMemoryCaseStore>();
+builder.Services.AddSingleton<IAuditStore, InMemoryAuditStore>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -77,7 +77,7 @@ app.Use(async (context, next) =>
         CorrelationId: context.TraceIdentifier
     );
 
-    context.RequestServices.GetRequiredService<InMemoryAuditStore>().Add(evt);
+    context.RequestServices.GetRequiredService<IAuditStore>().Add(evt);
 });
 
 app.MapControllers();

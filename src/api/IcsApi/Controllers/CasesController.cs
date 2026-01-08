@@ -9,9 +9,9 @@ namespace IcsApi.Controllers;
 [Route("cases")]
 public class CasesController : ControllerBase
 {
-    private readonly InMemoryCaseStore _store;
+    private readonly ICaseStore _store;
 
-    public CasesController(InMemoryCaseStore store)
+    public CasesController(ICaseStore store)
     {
         _store = store;
     }

@@ -3,7 +3,11 @@ using IcsApi.Models;
 
 namespace IcsApi.Services;
 
-public sealed class InMemoryCaseStore
+/// <summary>
+/// In-memory implementation of <see cref="ICaseStore"/>.
+/// Stores cases in a thread-safe dictionary. Data is not persisted and is lost on application restart.
+/// </summary>
+public sealed class InMemoryCaseStore : ICaseStore
 {
     private readonly ConcurrentDictionary<string, CaseItem> _cases = new();
 

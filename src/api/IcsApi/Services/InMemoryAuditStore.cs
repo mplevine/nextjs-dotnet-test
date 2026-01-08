@@ -3,7 +3,11 @@ using IcsApi.Models;
 
 namespace IcsApi.Services;
 
-public sealed class InMemoryAuditStore
+/// <summary>
+/// In-memory implementation of <see cref="IAuditStore"/>.
+/// Stores audit events in a queue with a maximum capacity. Data is not persisted and is lost on application restart.
+/// </summary>
+public sealed class InMemoryAuditStore : IAuditStore
 {
     private const int MaxEvents = 500;
     private readonly ConcurrentQueue<AuditEvent> _events = new();
