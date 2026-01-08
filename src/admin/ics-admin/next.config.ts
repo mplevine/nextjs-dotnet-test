@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export",
+  basePath: "/ics-admin",
+  assetPrefix: "/ics-admin/",
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
+  reactStrictMode: true,
 };
 
 export default nextConfig;

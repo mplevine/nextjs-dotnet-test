@@ -1,4 +1,5 @@
-import type { AccountInfo, AuthenticationResult } from "@azure/msal-browser";
+import type { AccountInfo, AuthenticationResult, InteractionStatus } from "@azure/msal-browser";
+import { InteractionRequiredAuthError, BrowserAuthError } from "@azure/msal-browser";
 import { jwtDecode } from "jwt-decode";
 import { env } from "./env";
 import { loginRequest, msalInstance } from "./msal";
@@ -6,6 +7,23 @@ import { loginRequest, msalInstance } from "./msal";
 type JwtRoles = {
   roles?: string[];
 };
+
+// Singleton promise to ensure initialize() and handleRedirectPromise() are only called once
+let initPromise: Promise<void> | null = null;
+
+async function ensureInitialized(): Promise<void> {
+  if (!initPromise) {
+    initPromise = (async () => {
+      await msalInstance.initialize();
+      // handleRedirectPromise must be called once after initialize to process any redirect response
+      const result = await msalInstance.handleRedirectPromise();
+      if (result?.account) {
+        msalInstance.setActiveAccount(result.account);
+      }
+    })();
+  }
+  return initPromise;
+}
 
 export function getActiveAccount(): AccountInfo | null {
   const active = msalInstance.getActiveAccount();
@@ -16,13 +34,7 @@ export function getActiveAccount(): AccountInfo | null {
 }
 
 export async function ensureSignedIn(): Promise<AccountInfo> {
-  await msalInstance.initialize();
-
-  const result = await msalInstance.handleRedirectPromise();
-  if (result?.account) {
-    msalInstance.setActiveAccount(result.account);
-    return result.account;
-  }
+  await ensureInitialized();
 
   const existing = getActiveAccount();
   if (existing) {
@@ -30,24 +42,39 @@ export async function ensureSignedIn(): Promise<AccountInfo> {
     return existing;
   }
 
+  // Check if an interaction is already in progress
+  // @ts-expect-error - accessing internal state for safety check
+  const inProgress = msalInstance.interactionInProgress?.();
+  if (inProgress) {
+    throw new Error("Redirecting to login");
+  }
+
   await msalInstance.loginRedirect(loginRequest);
   throw new Error("Redirecting to login");
 }
 
 export async function acquireApiToken(account: AccountInfo): Promise<AuthenticationResult> {
-  await msalInstance.initialize();
+  await ensureInitialized();
 
   try {
     return await msalInstance.acquireTokenSilent({
       ...loginRequest,
       account,
     });
-  } catch {
-    await msalInstance.acquireTokenRedirect({
-      ...loginRequest,
-      account,
-    });
-    throw new Error("Redirecting to acquire token");
+  } catch (e) {
+    // Only redirect for interaction-required errors, not for in-progress errors
+    if (e instanceof InteractionRequiredAuthError) {
+      await msalInstance.acquireTokenRedirect({
+        ...loginRequest,
+        account,
+      });
+      throw new Error("Redirecting to acquire token");
+    }
+    // If interaction is in progress, just throw to avoid duplicate redirects
+    if (e instanceof BrowserAuthError && e.errorCode === "interaction_in_progress") {
+      throw new Error("Redirecting to acquire token");
+    }
+    throw e;
   }
 }
 

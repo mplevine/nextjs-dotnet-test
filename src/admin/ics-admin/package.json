@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run copy-config",
+    "copy-config": "node -e \"require('fs').copyFileSync('deploy/web.config', 'out/web.config')\"",
     "start": "next start",
     "lint": "eslint"
   },
