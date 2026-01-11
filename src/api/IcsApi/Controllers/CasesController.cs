@@ -30,11 +30,11 @@ public class CasesController : ControllerBase
         var item = _store.Get(id);
         if (item is null)
         {
-            return NotFound(new ProblemDetails 
-            { 
-                Title = "Not found", 
-                Detail = $"Case '{id}' was not found." 
-            });
+            return Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Case not found",
+                detail: $"Case '{id}' was not found."
+            );
         }
         return Ok(item);
     }
@@ -45,11 +45,11 @@ public class CasesController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(request.Id))
         {
-            return BadRequest(new ProblemDetails 
-            { 
-                Title = "Validation", 
-                Detail = "Id is required." 
-            });
+            return Problem(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: "Validation error",
+                detail: "Id is required."
+            );
         }
 
         var now = DateTime.UtcNow;
@@ -57,7 +57,7 @@ public class CasesController : ControllerBase
         { 
             CreatedUtc = request.CreatedUtc == default ? now : request.CreatedUtc 
         });
-        return Created($"/cases/{created.Id}", created);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
     [HttpDelete("{id}")]
@@ -65,6 +65,12 @@ public class CasesController : ControllerBase
     public IActionResult Delete(string id)
     {
         var deleted = _store.Delete(id);
-        return deleted ? NoContent() : NotFound();
+        return deleted
+            ? NoContent()
+            : Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Case not found",
+                detail: $"Case '{id}' was not found."
+            );
     }
 }

@@ -1,7 +1,9 @@
 using System.Security.Claims;
 using IcsApi.Models;
 using IcsApi.Services;
+using IcsApi.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,11 +34,29 @@ builder.Services.AddSingleton<ICaseStore, InMemoryCaseStore>();
 builder.Services.AddSingleton<IAuditStore, InMemoryAuditStore>();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.OperationFilter<ProblemDetailsOperationFilter>();
+});
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
+app.UseExceptionHandler("/error");
+
+// Standardized (RFC 7807) error response for unhandled exceptions.
+// In production, don't leak exception details.
+app.Map("/error", (HttpContext context) =>
+{
+    var exceptionFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+    var exception = exceptionFeature?.Error;
+
+    return Results.Problem(
+        statusCode: StatusCodes.Status500InternalServerError,
+        title: "An unexpected error occurred.",
+        detail: app.Environment.IsDevelopment() ? exception?.ToString() : null,
+        instance: exceptionFeature?.Path
+    );
+}).AllowAnonymous();
 
 if (app.Environment.IsDevelopment() && builder.Configuration.GetValue<bool>("Ics:UsePathBase"))
 {
